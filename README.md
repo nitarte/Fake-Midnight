@@ -1,5 +1,6 @@
 # Fake Midnight - Затроль друга)
 by nitarte
+#password: nitartefisrt
 
 (C#)
 
